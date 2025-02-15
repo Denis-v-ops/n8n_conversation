@@ -1,0 +1,13 @@
+{
+  "domain": "n8n_conversation",
+  "name": "N8N Conversation",
+  "after_dependencies": ["assist_pipeline", "intent"],
+  "codeowners": ["@denis"],
+  "config_flow": true,
+  "dependencies": ["conversation"],
+  "documentation": "",
+  "integration_type": "service",
+  "iot_class": "cloud_polling",
+  "version": "1.0.0",
+  "requirements": []
+}
