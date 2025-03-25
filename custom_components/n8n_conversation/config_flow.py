@@ -8,22 +8,16 @@ from homeassistant.data_entry_flow import FlowResult
 
 from .const import DOMAIN, DEFAULT_NAME, CONF_WEBHOOK_URL, DEFAULT_WEBHOOK_URL
 
-
 def configured_instances(hass) -> set[str]:
     """Return a set of configured instance names."""
-    return {
-        entry.data[CONF_NAME] for entry in hass.config_entries.async_entries(DOMAIN)
-    }
-
+    return {entry.data[CONF_NAME] for entry in hass.config_entries.async_entries(DOMAIN)}
 
 class N8NConfigFlow(ConfigFlow, domain=DOMAIN):
     """Handle a config flow for N8N Conversation."""
 
     VERSION = 1
 
-    async def async_step_user(
-        self, user_input: dict[str, Any] | None = None
-    ) -> FlowResult:
+    async def async_step_user(self, user_input: dict[str, Any] | None = None) -> FlowResult:
         """Handle the initial step."""
         errors = {}
 
@@ -44,12 +38,8 @@ class N8NConfigFlow(ConfigFlow, domain=DOMAIN):
             step_id="user",
             data_schema=vol.Schema(
                 {
-                    vol.Required(
-                        CONF_NAME, default=default_data[CONF_NAME]
-                    ): str,
-                    vol.Required(
-                        CONF_WEBHOOK_URL, default=default_data[CONF_WEBHOOK_URL]
-                    ): str,
+                    vol.Required(CONF_NAME, default=default_data[CONF_NAME]): str,
+                    vol.Required(CONF_WEBHOOK_URL, default=default_data[CONF_WEBHOOK_URL]): str,
                 }
             ),
             errors=errors,

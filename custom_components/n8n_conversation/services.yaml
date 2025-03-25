@@ -1,0 +1,30 @@
+schedule_action:
+  name: "Schedule Action"
+  description: "Schedule, extend, or cancel a delayed action."
+  fields:
+    timer_id:
+      description: "A unique ID for the timer."
+      example: "living_room_timer"
+      required: true
+    action:
+      description: "The scheduling action to perform: set, extend, or cancel."
+      example: "set"
+      required: true
+    delay:
+      description: "Delay in seconds (optional, defaults to 0)."
+      example: 300
+      required: false
+      default: 0
+    service:
+      description: "The Home Assistant service to call (e.g., light.turn_off)."
+      example: "light.turn_off"
+      required: true
+    target:
+      description: "Target dictionary for the service call (optional)."
+      example: { "entity_id": "light.living_room" }
+      required: false
+    data:
+      description: "Additional data for the service call (optional, defaults to {})."
+      example: {}
+      required: false
+      default: {}
