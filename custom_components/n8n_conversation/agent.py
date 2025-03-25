@@ -24,8 +24,7 @@ class N8NConversationAgent(conversation.AbstractConversationAgent):
         self.hass = hass
         self.entry = entry
         self.webhook_url = entry.data.get(CONF_WEBHOOK_URL, DEFAULT_WEBHOOK_URL)
-        # Use an internal dictionary to store conversation histories.
-        # Keys are conversation IDs; values are lists of message dicts.
+        # Store conversation histories: keys are conversation IDs, values are lists of message dicts.
         self.history: dict[str, list[dict]] = {}
 
     @property
@@ -37,12 +36,10 @@ class N8NConversationAgent(conversation.AbstractConversationAgent):
         self, user_input: conversation.ConversationInput
     ) -> conversation.ConversationResult:
         """Process a sentence by sending it along with conversation history to the n8n webhook."""
-        # Retrieve existing conversation history if available.
         conversation_id = user_input.conversation_id
         if conversation_id and conversation_id in self.history:
             messages = self.history[conversation_id]
         else:
-            # Generate a new conversation_id if not provided.
             try:
                 from homeassistant.util import ulid
                 conversation_id = ulid.ulid()
@@ -51,11 +48,9 @@ class N8NConversationAgent(conversation.AbstractConversationAgent):
             user_input.conversation_id = conversation_id
             messages = []
         
-        # Append the user message to the conversation history.
         messages.append({"role": "user", "content": user_input.text})
         self.history[conversation_id] = messages
 
-        # Build payload. Optionally, you can send the whole history if your n8n workflow supports it.
         payload = {
             "user_input": user_input.text,
             "conversation_id": conversation_id,
@@ -83,14 +78,12 @@ class N8NConversationAgent(conversation.AbstractConversationAgent):
         _LOGGER.debug("Received JSON response: %s", data)
         _LOGGER.debug("Extracted intent response: %s", output)
 
-        # Prepare intent response.
-        intent_response = intent.IntentResponse(language=user_input.language)
-        intent_response.async_set_speech(output)
-
-        # Optionally, append the assistant's response to history.
+        # Append assistant's response to history.
         messages.append({"role": "assistant", "content": output})
         self.history[conversation_id] = messages
 
+        intent_response = intent.IntentResponse(language=user_input.language)
+        intent_response.async_set_speech(output)
         return conversation.ConversationResult(
             response=intent_response,
             conversation_id=conversation_id
